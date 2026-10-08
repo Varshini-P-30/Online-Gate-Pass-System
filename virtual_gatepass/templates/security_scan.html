@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow p-4 rounded-4">
+    <h3 class="text-center text-primary mb-4">Security QR Code Scan</h3>
+
+    <form method="POST">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        <input type="text" name="qr_code_data" class="form-control text-uppercase"
+               placeholder="Enter or Scan Student QR Code" autofocus required>
+        <button type="submit" class="btn btn-success">Verify</button>
+      </div>
+    </form>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center">{{ message }}</div>
+      {% endfor %}
+    {% endif %}
+
+    {% if student %}
+      <div class="card mt-4 border-0 shadow-sm">
+        <div class="card-body">
+          <h5 class="text-center text-info mb-3">Student Details</h5>
+          <table class="table table-bordered">
+            <tr><th>Name</th><td>{{ student.user.first_name }} {{ student.user.last_name }}</td></tr>
+            <tr><th>USN</th><td>{{ student.usn }}</td></tr>
+            <tr><th>Department</th><td>{{ student.department }}</td></tr>
+            <tr><th>Reason</th><td>{{ gatepass.reason }}</td></tr>
+            <tr><th>Parent Phone</th><td>{{ student.parent_phone }}</td></tr>
+          </table>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow p-4 rounded-4">
+    <h3 class="text-center text-primary mb-4">HOD Dashboard</h3>
+
+    <!-- Flash messages -->
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} text-center mb-3">
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle text-center">
+        <thead class="table-light">
+          <tr>
+            <th>Student Name</th>
+            <th>USN</th>
+            <th>Department</th>
+            <th>Reason</th>
+            <th>Counsellor Comment</th>
+            <th>Applied Date</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for gatepass in gatepasses %}
+          <tr>
+            <td>{{ gatepass.student.user.first_name }} {{ gatepass.student.user.last_name }}</td>
+            <td>{{ gatepass.student.usn }}</td>
+            <td>{{ gatepass.student.department.name }}</td>
+            <td>{{ gatepass.reason }}</td>
+            <td>{{ gatepass.counsellor_comment|default:"No comment" }}</td>
+            <td>{{ gatepass.applied_date|date:"Y-m-d H:i" }}</td>
+
+            <!-- Status column -->
+            <td>
+              {% if gatepass.hod_approved %}
+                <span class="badge bg-success">Approved</span>
+              {% elif gatepass.hod_rejected %}
+                <span class="badge bg-danger">Rejected</span>
+              {% else %}
+                <span class="badge bg-warning text-dark">Pending</span>
+              {% endif %}
+            </td>
+
+            <!-- Action buttons -->
+            <td>
+              {% if not gatepass.hod_approved and not gatepass.hod_rejected %}
+              <form method="POST" class="mb-0">
+                {% csrf_token %}
+                <input type="hidden" name="gatepass_id" value="{{ gatepass.id }}">
+                <div class="d-flex flex-column align-items-center">
+                  <textarea name="comment" class="form-control mb-2" rows="2"
+                            placeholder="Add HOD comment (optional)">{{ gatepass.hod_comment }}</textarea>
+                  <div class="d-flex justify-content-center gap-2">
+                    <button type="submit" name="decision" value="approve" class="btn btn-success btn-sm">Approve</button>
+                    <button type="submit" name="decision" value="reject" class="btn btn-danger btn-sm">Reject</button>
+                  </div>
+                </div>
+              </form>
+              {% else %}
+                <textarea class="form-control mb-2" readonly rows="2">{{ gatepass.hod_comment }}</textarea>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="8" class="text-center text-muted py-4">
+              No gate pass requests pending approval.
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

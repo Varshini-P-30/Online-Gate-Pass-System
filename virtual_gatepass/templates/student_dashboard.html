@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-5">
+
+  <!-- Dashboard Title -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="text-info fw-bold">My Gate Pass Requests</h3>
+    <a href="{% url 'apply_gatepass' %}" class="btn btn-primary btn-sm">
+      + Apply for New Gate Pass
+    </a>
+  </div>
+
+  <!-- Gatepass Table -->
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered align-middle shadow-sm">
+      <thead class="table-light">
+        <tr>
+          <th>Date</th>
+          <th>Reason</th>
+          <th>Status</th>
+          <th>Validity</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for gp in gatepasses %}
+        <tr>
+          <td>{{ gp.applied_date|date:"Y-m-d H:i" }}</td>
+          <td>{{ gp.reason }}</td>
+          <td>
+            {% if gp.status == "HOD_APPROVED" %}
+              <span class="badge bg-success">{{ gp.status }}</span>
+            {% elif gp.status == "HOD_REJECTED" or gp.status == "COUNSELLOR_REJECTED" %}
+              <span class="badge bg-danger">{{ gp.status }}</span>
+            {% elif gp.status == "COUNSELLOR_APPROVED" %}
+              <span class="badge bg-info text-dark">{{ gp.status }}</span>
+            {% else %}
+              <span class="badge bg-secondary">{{ gp.status }}</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if gp.is_active %}
+              <span class="text-success fw-bold">Active till {{ gp.approved_date|add:"1:00"|date:"H:i" }}</span>
+            {% elif gp.status == "HOD_REJECTED" or gp.status == "COUNSELLOR_REJECTED" %}
+              <span class="text-danger">Rejected</span>
+            {% else %}
+              <span class="text-muted">Not active</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center text-muted py-4">
+            No gate pass requests yet. 
+            <br>
+            <a href="{% url 'apply_gatepass' %}" class="btn btn-outline-primary mt-3">
+              Apply Now
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}
+

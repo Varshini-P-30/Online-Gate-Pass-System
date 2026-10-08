@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow mx-auto" style="max-width: 600px;">
+    <div class="card-body">
+      <h3 class="text-center text-primary mb-4">Student Registration</h3>
+      
+      <form method="post" id="studentForm">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <!-- Username -->
+        <div class="mb-3">
+          <label class="form-label">Username</label>
+          {{ form.username|add_class:"form-control" }}
+        </div>
+
+        <!-- First Name -->
+        <div class="mb-3">
+          <label class="form-label">First Name</label>
+          {{ form.first_name|add_class:"form-control" }}
+        </div>
+
+        <!-- Last Name -->
+        <div class="mb-3">
+          <label class="form-label">Last Name</label>
+          {{ form.last_name|add_class:"form-control" }}
+        </div>
+
+        <!-- Email -->
+        <div class="mb-3">
+          <label class="form-label">Email</label>
+          {{ form.email|add_class:"form-control" }}
+        </div>
+
+        <!-- USN -->
+        <div class="mb-3">
+          <label class="form-label">USN</label>
+          {{ form.usn|add_class:"form-control" }}
+        </div>
+
+        <!-- Course Year -->
+        <div class="mb-3">
+          <label class="form-label">Course Year</label>
+          {{ form.course_year|add_class:"form-select" }}
+        </div>
+
+        <!-- Course Semester -->
+        <div class="mb-3">
+          <label class="form-label">Course Semester</label>
+          {{ form.course_semester|add_class:"form-select" }}
+        </div>
+
+        <!-- Department -->
+        <div class="mb-3">
+          <label class="form-label">Department</label>
+          {% render_field form.department class="form-select" id="departmentSelect" %}
+        </div>
+
+        <!-- Phone -->
+        <div class="mb-3">
+          <label class="form-label">Phone</label>
+          {{ form.phone|add_class:"form-control" }}
+        </div>
+
+        <!-- Parent Phone -->
+        <div class="mb-3">
+          <label class="form-label">Parent Phone</label>
+          {{ form.parent_phone|add_class:"form-control" }}
+        </div>
+
+        <!-- Counsellor -->
+        <div class="mb-3">
+          <label class="form-label">Counsellor</label>
+          {% render_field form.counsellor class="form-select" id="counsellorSelect" %}
+        </div>
+
+        <!-- Password -->
+        <div class="mb-3">
+          <label class="form-label">Password</label>
+          {{ form.password1|add_class:"form-control" }}
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="mb-3">
+          <label class="form-label">Confirm Password</label>
+          {{ form.password2|add_class:"form-control" }}
+        </div>
+
+        <button type="submit" class="btn btn-success w-100 rounded-pill">Register</button>
+      </form>
+
+      <div class="text-center mt-3">
+        <a href="{% url 'login' %}" class="btn btn-outline-primary">Back to Login</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ JavaScript: Auto-filter counsellor list by department -->
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const deptSelect = document.getElementById("departmentSelect");
+  const counsellorSelect = document.getElementById("counsellorSelect");
+
+  if (deptSelect && counsellorSelect) {
+    const allOptions = Array.from(counsellorSelect.options);
+
+    deptSelect.addEventListener("change", function() {
+      const selectedDept = deptSelect.value;
+      counsellorSelect.innerHTML = "";
+
+      // Default placeholder
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = "-- Select Counsellor --";
+      counsellorSelect.appendChild(defaultOpt);
+
+      // Show only counsellors from same department
+      allOptions.forEach(opt => {
+        if (opt.text.includes(selectedDept)) {
+          counsellorSelect.appendChild(opt);
+        }
+      });
+    });
+  }
+});
+</script>
+{% endblock %}

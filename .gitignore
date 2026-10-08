@@ -1,0 +1,7 @@
+.env
+__pycache__/
+*.py[cod]
+db.sqlite3
+media/
+staticfiles/
+virtual_gatepass/static/images/SHWETHA RESUME (1).pdf

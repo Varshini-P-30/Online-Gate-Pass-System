@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="text-center mb-4">My Gate Pass Requests</h2>
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>Applied Date</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Active Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for gp in gatepasses %}
+      <tr>
+        <td>{{ gp.applied_date }}</td>
+        <td>{{ gp.reason }}</td>
+        <td>{{ gp.status }}</td>
+        {% if gp.is_active %}
+          <td class="text-success">Active till {{ gp.approved_date|add:"1:00" }}</td>
+        {% else %}
+          <td class="text-muted">Not Active</td>
+        {% endif %}
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-danger">No Gate Pass Requests Found</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

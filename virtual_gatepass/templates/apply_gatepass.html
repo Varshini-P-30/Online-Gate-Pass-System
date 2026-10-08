@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load tz %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow p-4 rounded-4">
+    <h3 class="text-center mb-4 text-primary">Apply for Gate Pass</h3>
+
+    <form method="POST" id="gatepassForm">
+      {% csrf_token %}
+
+      <!-- Course Year -->
+      <div class="mb-3">
+        <label class="form-label">Course Year</label>
+        {% render_field form.course_year class="form-select" %}
+      </div>
+
+      <!-- Course Semester -->
+      <div class="mb-3">
+        <label class="form-label">Course Semester</label>
+        {% render_field form.course_semester class="form-select" %}
+      </div>
+
+      <!-- Counsellor Selection -->
+      <div class="mb-3">
+        <label class="form-label">Counsellor Name</label>
+        {% render_field form.counsellor class="form-select" id="counsellorDropdown" %}
+      </div>
+
+      <!-- HOD Name (Auto-filled based on counsellor’s department) -->
+      <div class="mb-3">
+        <label class="form-label">HOD Name</label>
+        <input type="text" id="hodName" class="form-control" placeholder="Select counsellor first" readonly>
+      </div>
+
+      <!-- From Date -->
+      <div class="mb-3">
+        <label class="form-label">From Date</label>
+        {% render_field form.from_date class="form-control" type="date" %}
+      </div>
+
+      <!-- To Date -->
+      <div class="mb-3">
+        <label class="form-label">To Date</label>
+        {% render_field form.to_date class="form-control" type="date" %}
+      </div>
+
+      <!-- Current Date & Time -->
+      <div class="mb-3">
+        <label class="form-label">Applied Date & Time</label>
+        <input type="text" class="form-control" value="{{ now|date:'Y-m-d H:i' }}" readonly>
+      </div>
+
+      <!-- Reason -->
+      <div class="mb-3">
+        <label class="form-label">Reason for Gate Pass</label>
+        {% render_field form.reason class="form-control" placeholder="Enter your reason clearly" %}
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-primary w-100 rounded-pill">Submit Request</button>
+    </form>
+  </div>
+</div>
+
+<!-- ✅ JS: Auto-fetch HOD when counsellor is selected -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const counsellorSelect = document.getElementById("counsellorDropdown");
+  const hodField = document.getElementById("hodName");
+
+  if (counsellorSelect) {
+    counsellorSelect.addEventListener("change", async function () {
+      const counsellorId = this.value;
+      hodField.value = "Loading...";
+
+      if (!counsellorId) {
+        hodField.value = "Select counsellor first";
+        return;
+      }
+
+      try {
+        const response = await fetch(`/get_hod/${counsellorId}/`);
+        if (!response.ok) throw new Error("Network error");
+        const data = await response.json();
+        hodField.value = data.hod_name || "No HOD assigned";
+      } catch (error) {
+        console.error("Error fetching HOD:", error);
+        hodField.value = "Error fetching HOD";
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

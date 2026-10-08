@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff Registration | Virtual Gate Pass System</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+  <div class="container mt-5">
+    <div class="card shadow-lg border-0 mx-auto" style="max-width: 600px;">
+      <div class="card-body">
+        <h3 class="text-center text-primary fw-bold">
+          {{ role|title }} Registration
+        </h3>
+        <hr>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST">
+          {% csrf_token %}
+          
+          <div class="mb-3">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-control" placeholder="Enter your name" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Department</label>
+            <select name="department" class="form-select" required>
+              <option value="">-- Select Department --</option>
+              <option value="CSE">Computer Science</option>
+              <option value="ISE">Information Science</option>
+              <option value="ECE">Electronics and Communication</option>
+              <option value="EEE">Electrical and Electronics</option>
+              <option value="AIML">Artificial Inteligence And ML</option>
+              <option value="AIDS">Artificial Inteligence And DS Engineering</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control" placeholder="Enter email" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" placeholder="Enter password" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Confirm Password</label>
+            <input type="password" name="confirm_password" class="form-control" placeholder="Confirm password" required>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary">Register</button>
+          </div>
+
+          <p class="text-center mt-3">
+            Already have an account?
+            <a href="{% url 'login_staff' role %}">Login here</a>
+          </p>
+          <a href="{% url 'home' %}">Back</a>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
+

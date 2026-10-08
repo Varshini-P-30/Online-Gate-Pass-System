@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>GatePass #{{ gp.id }}</h2>
+<p><strong>Student:</strong> {{ gp.student.username }} ({{ gp.student.usn }})</p>
+<p><strong>Reason:</strong> {{ gp.reason }}</p>
+
+<form method="post">
+  {% csrf_token %}
+  <div class="mb-3">
+    <textarea name="comment" class="form-control" placeholder="Comment (optional)"></textarea>
+  </div>
+  <button name="action" value="approve" class="btn btn-success">Approve</button>
+  <button name="action" value="reject" class="btn btn-danger">Reject</button>
+</form>
+
+<a href="{% url 'counsellor_dashboard' %}" class="btn btn-link mt-3">Back</a>
+{% endblock %}

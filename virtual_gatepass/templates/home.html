@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<!-- Background image style -->
+<style>
+  body {
+    background: url("{% static 'images/college_bg.jpg' %}") no-repeat center center fixed;
+    background-size: cover;
+    font-family: 'Poppins', sans-serif;
+  }
+
+  .card {
+    background-color: rgba(255, 255, 255, 0.9); /* Transparent white card */
+    backdrop-filter: blur(5px);
+  }
+
+  .logo-img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    font-weight: 700;
+  }
+
+  .btn {
+    font-size: 16px;
+  }
+</style>
+
+<div class="container text-center mt-5">
+  <div class="card shadow p-4 rounded-4 border-0 mx-auto" style="max-width: 500px;">
+
+    <!-- ✅ College Logo -->
+    <img src="{% static 'images/logo.jpg' %}" alt="College Logo" class="logo-img mx-auto d-block">
+
+    <h2 class="text-primary fw-bold mb-4">Welcome to Online Gate Pass System</h2>
+
+    <!-- Login Button -->
+    <a href="{% url 'login' %}" class="btn btn-primary w-100 mb-3 rounded-pill fw-semibold">Login</a>
+
+    <h5 class="mb-3 text-secondary">Register as:</h5>
+
+    <!-- Registration Buttons -->
+    <a href="{% url 'student_register' %}" class="btn btn-outline-success w-100 mb-2 rounded-pill">Student</a>
+    <a href="{% url 'counsellor_register' %}" class="btn btn-outline-info w-100 mb-2 rounded-pill">Counsellor</a>
+    <a href="{% url 'hod_register' %}" class="btn btn-outline-warning w-100 mb-3 rounded-pill">HOD</a>
+
+    <hr>
+
+    <!-- ✅ Security Button -->
+    <a href="{% url 'security_dashboard' %}" class="btn btn-dark w-100 rounded-pill">Security</a>
+    <small class="text-muted d-block mt-2">
+      (For use by security personnel to verify gate passes)
+    </small>
+  </div>
+</div>
+
+{% endblock %}
